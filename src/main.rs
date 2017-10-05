@@ -5,11 +5,23 @@ mod todo_item;
 use app_state::AppState;
 use todo_item::TodoItem;
 
+fn display_todos(state: &mut AppState) {
+    for item in state.get_todo_list() {
+        let marker = if item.complete {
+            '✓'
+        }
+        else {
+            '✕'
+        };
+        println!("\t{} - {}", marker, item.description);
+    }
+}
+
 fn main() {
     let state = AppState::new();
     let items: Vec<MenuItem<AppState>> = vec![
         MenuItem::new("Exit:", |state| state.quit()),
-        MenuItem::new("Display todos:", |state| println!("{:?}", state.get_todo_list())),
+        MenuItem::new("Display todos:", display_todos),
         MenuItem::new("Add Todo:", |state| state.add_todo(TodoItem::new("Allow user to input their own todos.", false))),
     ];
     let mut menu = Menu::new(state, items);
