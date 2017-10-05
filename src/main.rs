@@ -5,6 +5,34 @@ mod todo_item;
 use app_state::AppState;
 use todo_item::TodoItem;
 
+fn main() {
+    let state = AppState::new();
+    let items: Vec<MenuItem<AppState>> = vec![
+        MenuItem::new("Exit:", |state| state.quit()),
+        MenuItem::new("Display todos:", display_todos),
+        MenuItem::new("Add Todo:", add_todo),
+    ];
+    let mut menu = Menu::new(state, items);
+
+    while menu.state.is_running() {
+        menu.display();
+        menu.choose();
+    }
+}
+
+fn add_todo(state: &mut AppState) {
+    // Query the user for a new Todo:
+    let mut description = String::new();
+    println!("Please write the task description:");
+
+    if let Err(msg) = std::io::stdin().read_line(&mut description) {
+        println!("{}", msg);
+        return;
+    }
+
+    state.add_todo(TodoItem::new(description, false));
+}
+
 fn display_todos(state: &mut AppState) {
     for item in state.get_todo_list() {
         let marker = if item.complete {
@@ -14,21 +42,6 @@ fn display_todos(state: &mut AppState) {
             '✕'
         };
         println!("\t{} - {}", marker, item.description);
-    }
-}
-
-fn main() {
-    let state = AppState::new();
-    let items: Vec<MenuItem<AppState>> = vec![
-        MenuItem::new("Exit:", |state| state.quit()),
-        MenuItem::new("Display todos:", display_todos),
-        MenuItem::new("Add Todo:", |state| state.add_todo(TodoItem::new("Allow user to input their own todos.", false))),
-    ];
-    let mut menu = Menu::new(state, items);
-
-    while menu.state.is_running() {
-        menu.display();
-        menu.choose();
     }
 }
 
@@ -56,18 +69,25 @@ impl<State> Menu<State> {
     /// item.
     pub fn choose(&mut self) {
         let mut choice = String::new();
-        if std::io::stdin().read_line(&mut choice).is_ok() {
-            let choice = choice.trim().parse::<usize>().unwrap();
-            if let Some(item) = self.items.get(choice) {
-                let perform_action = item.action;
-                perform_action(&mut self.state);
+        if let Err(msg) = std::io::stdin().read_line(&mut choice) {
+            println!("{}", msg);
+            return;
+        }
+
+        let choice = match choice.trim().parse::<usize>() {
+            Ok(choice) => choice,
+            Err(msg) => {
+                println!("{}", msg);
+                return;
             }
-            else {
-                println!("Please select one of the options provided.")
-            }
+        };
+
+        if let Some(item) = self.items.get(choice) {
+            let perform_action = item.action;
+            perform_action(&mut self.state);
         }
         else {
-            println!("Failed to read choice.");
+            println!("Please select one of the options provided.")
         }
     }
 }
