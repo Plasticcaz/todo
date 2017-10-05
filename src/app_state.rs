@@ -38,6 +38,12 @@ impl AppState {
         let item = self.todos.remove(index);
         self.changes.push(TodoAppEvent::RemoveTodoAt(item, index));
     }
+    
+    pub fn toggle_complete(&mut self, index: usize) {
+        let item = &mut self.todos[index];
+        item.complete = !item.complete;
+        self.changes.push(TodoAppEvent::ToggleComplete(index))
+    }
 
     pub fn get_todo_list(&self) -> &[TodoItem] {
         &self.todos

@@ -3,13 +3,16 @@ mod app_event;
 mod todo_item;
 
 use app_state::AppState;
+use todo_item::TodoItem;
 
 fn main() {
     let state = AppState::new();
-    let mut menu = Menu::new(state, vec![
-        MenuItem::new("Display todos:", |state| println!("{:?}", state.get_todo_list())),
+    let items: Vec<MenuItem<AppState>> = vec![
         MenuItem::new("Exit:", |state| state.quit()),
-    ]);
+        MenuItem::new("Display todos:", |state| println!("{:?}", state.get_todo_list())),
+        MenuItem::new("Add Todo:", |state| state.add_todo(TodoItem::new("Allow user to input their own todos.", false))),
+    ];
+    let mut menu = Menu::new(state, items);
 
     while menu.state.is_running() {
         menu.display();
@@ -37,13 +40,15 @@ impl<State> Menu<State> {
         }
     }
 
+    /// Have the user choose a menu item, and execute the action associated with that 
+    /// item.
     pub fn choose(&mut self) {
         let mut choice = String::new();
         if std::io::stdin().read_line(&mut choice).is_ok() {
             let choice = choice.trim().parse::<usize>().unwrap();
             if let Some(item) = self.items.get(choice) {
-                let f = item.action;
-                f(&mut self.state);
+                let perform_action = item.action;
+                perform_action(&mut self.state);
             }
             else {
                 println!("Please select one of the options provided.")
