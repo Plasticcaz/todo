@@ -23,7 +23,7 @@ fn main() {
 
 fn toggle_complete(state: &mut AppState) {
     for (index, item) in state.get_todo_list().iter().enumerate() {
-        println!("\t{}. {}", index, item.description);
+        println!("\t{}. {}", index, item);
     }
     // TODO: Actually implement toggling.
 }
@@ -43,13 +43,8 @@ fn add_todo(state: &mut AppState) {
 
 fn display_todos(state: &mut AppState) {
     for item in state.get_todo_list() {
-        let marker = if item.complete {
-            '✓'
-        }
-        else {
-            '✕'
-        };
-        println!("\t{} - {}", marker, item.description);
+       
+        println!("\t{}", item);
     }
 }
 
