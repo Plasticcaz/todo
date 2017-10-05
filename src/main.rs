@@ -25,7 +25,12 @@ fn toggle_complete(state: &mut AppState) {
     for (index, item) in state.get_todo_list().iter().enumerate() {
         println!("\t{}. {}", index, item);
     }
-    // TODO: Actually implement toggling.
+    let mut choice = String::new();
+    if let Err(msg) = std::io::stdin().read_line(&mut choice) {
+        println!("{}", msg);
+        return;
+    } 
+
 }
 
 fn add_todo(state: &mut AppState) {
@@ -62,7 +67,7 @@ impl<State> Menu<State> {
         }
     }
     pub fn display(&self) {
-        println!("TODO MENU:\nPick the number for the option you wish to select:");
+        println!("\n\n\nTODO MENU:\nPick the number for the option you wish to select:");
         for (index, option) in self.items.iter().enumerate() {
             println!("\t{} - {}", index, option.description);
         }
@@ -71,13 +76,7 @@ impl<State> Menu<State> {
     /// Have the user choose a menu item, and execute the action associated with that 
     /// item.
     pub fn choose(&mut self) {
-        let mut choice = String::new();
-        if let Err(msg) = std::io::stdin().read_line(&mut choice) {
-            println!("{}", msg);
-            return;
-        }
-
-        let choice = match choice.trim().parse::<usize>() {
+        let choice = match read_usize() {
             Ok(choice) => choice,
             Err(msg) => {
                 println!("{}", msg);
@@ -108,4 +107,12 @@ impl<State> MenuItem<State> {
             action
         }
     }
+}
+
+fn read_usize() -> Result<usize, String> {
+    let mut choice = String::new();
+    if let Err(msg) = std::io::stdin().read_line(&mut choice) {
+        return Err(format!("{}", msg));
+    }
+    choice.trim().parse::<usize>().map_err(|err| format!("{}", err))
 }
