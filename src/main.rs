@@ -22,15 +22,17 @@ fn main() {
 }
 
 fn toggle_complete(state: &mut AppState) {
+    // Print out all the options.
     for (index, item) in state.get_todo_list().iter().enumerate() {
         println!("\t{}. {}", index, item);
     }
-    let mut choice = String::new();
-    if let Err(msg) = std::io::stdin().read_line(&mut choice) {
-        println!("{}", msg);
-        return;
-    } 
 
+    let mut choice = read_usize();
+    while let Err(msg) = choice {
+        println!("{}", msg);
+        choice = read_usize();
+    }
+    state.toggle_complete(choice.unwrap());
 }
 
 fn add_todo(state: &mut AppState) {
