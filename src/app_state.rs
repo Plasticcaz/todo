@@ -5,17 +5,20 @@ pub struct AppState {
     /// The list of todo items we wish to complete.
     todos: Vec<TodoItem>,
     /// Keeps track of the changes made to the todo list.
-    changes: Vec<TodoAppEvent>
+    changes: Vec<TodoAppEvent>,
+    running: bool,
 }
 
 impl AppState {
     pub fn new() -> AppState {
         let todos = Vec::new();
         let changes = Vec::new();
+        let running = true;
 
         AppState {
             todos,
             changes,
+            running,
         }
     }
 
@@ -42,5 +45,13 @@ impl AppState {
 
     pub fn get_changes(&self) -> &[TodoAppEvent] {
         &self.changes
+    }
+
+    pub fn is_running(&self) -> bool {
+        self.running
+    }
+
+    pub fn quit(&mut self) {
+        self.running = false;
     }
 }
