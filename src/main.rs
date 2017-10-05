@@ -11,6 +11,7 @@ fn main() {
         MenuItem::new("Exit:", |state| state.quit()),
         MenuItem::new("Display todos:", display_todos),
         MenuItem::new("Add Todo:", add_todo),
+        MenuItem::new("Toggle complete:", toggle_complete),
     ];
     let mut menu = Menu::new(state, items);
 
@@ -18,6 +19,13 @@ fn main() {
         menu.display();
         menu.choose();
     }
+}
+
+fn toggle_complete(state: &mut AppState) {
+    for (index, item) in state.get_todo_list().iter().enumerate() {
+        println!("\t{}. {}", index, item.description);
+    }
+    // TODO: Actually implement toggling.
 }
 
 fn add_todo(state: &mut AppState) {
@@ -30,7 +38,7 @@ fn add_todo(state: &mut AppState) {
         return;
     }
 
-    state.add_todo(TodoItem::new(description, false));
+    state.add_todo(TodoItem::new(description.trim(), false));
 }
 
 fn display_todos(state: &mut AppState) {
