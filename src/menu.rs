@@ -34,6 +34,7 @@ pub fn toggle_complete(state: &mut AppState) {
         for (index, item) in state.get_todo_list().iter().enumerate() {
             println!("\t{}. {}", index, item);
         }
+        println!("\t{}. Back.", len);
 
         let mut choice = read_usize();
         while let Err(msg) = choice {
@@ -43,6 +44,9 @@ pub fn toggle_complete(state: &mut AppState) {
         the_choice = choice.unwrap();
         if the_choice < len {
             done = true;
+        }
+        else if the_choice == len {
+            return;
         }
     }
     state.toggle_complete(the_choice);
