@@ -1,6 +1,8 @@
 use todo_item::TodoItem;
 use app_event::TodoAppEvent;
 
+const FILEPATH: &str = "db.todo";
+
 pub struct AppState {
     /// The list of todo items we wish to complete.
     todos: Vec<TodoItem>,
@@ -60,5 +62,23 @@ impl AppState {
 
     pub fn quit(&mut self) {
         self.running = false;
+        self.save(FILEPATH)
+    }
+
+    pub fn save(&self, path: &str) {
+        use std::fs::File;
+        use std::io::{Write, BufWriter};
+        let file = match File::create(path) {
+            Ok(file) => file,
+            Err(msg) => {
+                println!("Error: {}", msg);
+                return;
+            }
+        };
+        let mut file = BufWriter::new(file);
+
+        for item in self.todos.iter() {
+            writeln!(file, "{}:{}", item.description, item.complete).unwrap();
+        }
     }
 }
