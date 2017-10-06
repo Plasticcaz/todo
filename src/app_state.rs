@@ -78,7 +78,7 @@ impl AppState {
         let mut file = BufWriter::new(file);
 
         for item in self.todos.iter() {
-            writeln!(file, "{}:{}", item.description, item.complete).unwrap();
+            writeln!(file, "{},{}", item.description, item.complete).unwrap();
         }
     }
 }
