@@ -12,6 +12,7 @@ fn main() {
         MenuItem::new("Display todos:", display_todos),
         MenuItem::new("Add Todo:", add_todo),
         MenuItem::new("Toggle complete:", toggle_complete),
+        MenuItem::new("Remove Todo:", remove_todo)
     ];
     let mut menu = Menu::new(state, items);
 
@@ -21,7 +22,26 @@ fn main() {
     }
 }
 
+fn remove_todo(state: &mut AppState) {
+    if state.get_todo_list().len() == 0 {
+        return;
+    }
+    // Print out all the options.
+    for (index, item) in state.get_todo_list().iter().enumerate() {
+        println!("\t{}. {}", index, item);
+    }
+    let mut choice = read_usize();
+    while let Err(msg) = choice {
+        println!("{}", msg);
+        choice = read_usize();
+    }
+    state.remove_todo(choice.unwrap());
+}
+
 fn toggle_complete(state: &mut AppState) {
+    if state.get_todo_list().len() == 0 {
+        return;
+    }
     // Print out all the options.
     for (index, item) in state.get_todo_list().iter().enumerate() {
         println!("\t{}. {}", index, item);
@@ -50,7 +70,6 @@ fn add_todo(state: &mut AppState) {
 
 fn display_todos(state: &mut AppState) {
     for item in state.get_todo_list() {
-       
         println!("\t{}", item);
     }
 }
