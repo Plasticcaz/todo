@@ -70,7 +70,12 @@ fn add_todo(state: &mut AppState) {
 }
 
 fn display_todos(state: &mut AppState) {
-    for item in state.get_todo_list() {
+    let items = state.get_todo_list();
+    if items.is_empty() {
+        println!("There are no todos currently stored.");
+    }
+
+    for item in items { 
         println!("\t{}", item);
     }
 }
