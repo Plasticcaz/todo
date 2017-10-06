@@ -22,21 +22,30 @@ pub fn remove_todo(state: &mut AppState) {
 
 pub fn toggle_complete(state: &mut AppState) {
     clear_screen();
-    if state.get_todo_list().len() == 0 {
+    let len = state.get_todo_list().len();
+    if len == 0 {
         return;
     }
-    println!("Select an item to toggle as complete/incomplete:");
-    // Print out all the options.
-    for (index, item) in state.get_todo_list().iter().enumerate() {
-        println!("\t{}. {}", index, item);
-    }
+    let mut done = false;
+    let mut the_choice = 0;
+    while !done {
+        println!("Select an item to toggle as complete/incomplete:");
+        // Print out all the options.
+        for (index, item) in state.get_todo_list().iter().enumerate() {
+            println!("\t{}. {}", index, item);
+        }
 
-    let mut choice = read_usize();
-    while let Err(msg) = choice {
-        println!("{}", msg);
-        choice = read_usize();
+        let mut choice = read_usize();
+        while let Err(msg) = choice {
+            println!("{}", msg);
+            choice = read_usize();
+        }
+        the_choice = choice.unwrap();
+        if the_choice < len {
+            done = true;
+        }
     }
-    state.toggle_complete(choice.unwrap());
+    state.toggle_complete(the_choice);
     println!();
 }
 
