@@ -13,7 +13,7 @@ pub struct AppState {
 
 impl AppState {
     pub fn new() -> AppState {
-        let todos = Vec::new();
+        let todos = load(FILEPATH);
         let changes = Vec::new();
         let running = true;
 
@@ -68,6 +68,7 @@ impl AppState {
     pub fn save(&self, path: &str) {
         use std::fs::File;
         use std::io::{Write, BufWriter};
+
         let file = match File::create(path) {
             Ok(file) => file,
             Err(msg) => {
@@ -81,4 +82,32 @@ impl AppState {
             writeln!(file, "{},{}", item.description, item.complete).unwrap();
         }
     }
+}
+
+fn load(path: &str) -> Vec<TodoItem> {
+    use std::fs::File;
+    use std::io::{BufRead, BufReader};
+
+    let mut items = Vec::new();
+    let file = match File::open(path) {
+        Ok(file) => file,
+        Err(msg) => {
+            println!("Error: {}\nUsing an empty todo list.", msg);
+            return items;
+        }
+    };
+
+    for line in BufReader::new(file).lines() {
+        let line = line.unwrap();
+        if line.contains(',') {
+            let split: Vec<_> = line.split(',').collect();
+            if split.len() != 2 { 
+                panic!("{} is not the expected format!", path);
+            }
+            let complete = split[1].trim().parse::<bool>().unwrap();
+            items.push(TodoItem::new(split[0].trim(), complete));
+        }
+    }
+
+    items
 }
