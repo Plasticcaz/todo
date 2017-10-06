@@ -25,6 +25,7 @@ pub fn toggle_complete(state: &mut AppState) {
     if state.get_todo_list().len() == 0 {
         return;
     }
+    println!("Select an item to toggle as complete/incomplete:");
     // Print out all the options.
     for (index, item) in state.get_todo_list().iter().enumerate() {
         println!("\t{}. {}", index, item);
