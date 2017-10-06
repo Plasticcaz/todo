@@ -54,7 +54,7 @@ pub fn add_todo(state: &mut AppState) {
     println!();
 }
 
-pub fn display_todos(state: &mut AppState) {
+fn display_todos(state: &AppState) {
     clear_screen();
     println!("Todo:");
     let items = state.get_todo_list();
@@ -68,20 +68,20 @@ pub fn display_todos(state: &mut AppState) {
     println!();
 }
 
-pub struct Menu<State> {
-    // TODO(zac): We should really make this private and look into exposing a while_running in the menu.
-    pub state: State,
-    items: Vec<MenuItem<State>>,
+pub struct Menu {
+    pub state: AppState,
+    items: Vec<MenuItem>,
 }
 
-impl<State> Menu<State> {
-    pub fn new(state: State, items: Vec<MenuItem<State>>) -> Menu<State> {
+impl Menu {
+    pub fn new(state: AppState, items: Vec<MenuItem>) -> Menu {
         Menu {
             state,
             items,
         }
     }
     pub fn display(&self) {
+        display_todos(&self.state);
         println!("Main Menu:\nPick the number for the option you wish to select:");
         for (index, option) in self.items.iter().enumerate() {
             println!("\t{} - {}", index, option.description);
@@ -110,13 +110,13 @@ impl<State> Menu<State> {
     }
 }
 
-pub struct MenuItem<State> {
+pub struct MenuItem {
     pub description: String,
-    pub action: fn(&mut State),
+    pub action: fn(&mut AppState),
 }
 
-impl<State> MenuItem<State> {
-    pub fn new<S: Into<String>>(description: S, action: fn(&mut State)) -> MenuItem<State> {
+impl MenuItem {
+    pub fn new<S: Into<String>>(description: S, action: fn(&mut AppState)) -> MenuItem {
         let description = description.into();
         MenuItem {
             description,

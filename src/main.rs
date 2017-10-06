@@ -4,13 +4,12 @@ mod todo_item;
 mod menu;
 
 use app_state::AppState;
-use menu::{Menu, MenuItem, display_todos, add_todo, toggle_complete, remove_todo};
+use menu::{Menu, MenuItem, add_todo, toggle_complete, remove_todo};
 
 fn main() {
     let state = AppState::new();
-    let items: Vec<MenuItem<AppState>> = vec![
+    let items: Vec<MenuItem> = vec![
         MenuItem::new("Exit:", AppState::quit),
-        MenuItem::new("Display todos:", display_todos),
         MenuItem::new("Add Todo:", add_todo),
         MenuItem::new("Toggle complete:", toggle_complete),
         MenuItem::new("Remove Todo:", remove_todo),
