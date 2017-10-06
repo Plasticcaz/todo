@@ -28,12 +28,6 @@ impl AppState {
         self.changes.push(TodoAppEvent::AddTodoAt(item, add_index));
     }
 
-    pub fn replace_todo(&mut self, index: usize, item: TodoItem) {
-        self.todos.push(item.clone());
-        let prev = self.todos.swap_remove(index);
-        self.changes.push(TodoAppEvent::ReplaceTodoAt(prev, item, index));
-    }
-
     pub fn remove_todo(&mut self, index: usize) {
         let item = self.todos.remove(index);
         self.changes.push(TodoAppEvent::RemoveTodoAt(item, index));
