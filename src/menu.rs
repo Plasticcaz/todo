@@ -3,6 +3,7 @@ use todo_item::TodoItem;
 use std;
 
 pub fn remove_todo(state: &mut AppState) {
+    clear_screen();
     if state.get_todo_list().len() == 0 {
         return;
     }
@@ -16,9 +17,11 @@ pub fn remove_todo(state: &mut AppState) {
         choice = read_usize();
     }
     state.remove_todo(choice.unwrap());
+    println!();
 }
 
 pub fn toggle_complete(state: &mut AppState) {
+    clear_screen();
     if state.get_todo_list().len() == 0 {
         return;
     }
@@ -33,9 +36,11 @@ pub fn toggle_complete(state: &mut AppState) {
         choice = read_usize();
     }
     state.toggle_complete(choice.unwrap());
+    println!();
 }
 
 pub fn add_todo(state: &mut AppState) {
+    clear_screen();
     // Query the user for a new Todo:
     let mut description = String::new();
     println!("Please write the task description:");
@@ -46,9 +51,12 @@ pub fn add_todo(state: &mut AppState) {
     }
 
     state.add_todo(TodoItem::new(description.trim(), false));
+    println!();
 }
 
 pub fn display_todos(state: &mut AppState) {
+    clear_screen();
+    println!("Todo:");
     let items = state.get_todo_list();
     if items.is_empty() {
         println!("There are no todos currently stored.");
@@ -57,6 +65,7 @@ pub fn display_todos(state: &mut AppState) {
     for item in items { 
         println!("\t{}", item);
     }
+    println!();
 }
 
 pub struct Menu<State> {
@@ -73,10 +82,11 @@ impl<State> Menu<State> {
         }
     }
     pub fn display(&self) {
-        println!("\n\n\nTODO MENU:\nPick the number for the option you wish to select:");
+        println!("Main Menu:\nPick the number for the option you wish to select:");
         for (index, option) in self.items.iter().enumerate() {
             println!("\t{} - {}", index, option.description);
         }
+        println!();
     }
 
     /// Have the user choose a menu item, and execute the action associated with that 
@@ -121,4 +131,8 @@ fn read_usize() -> Result<usize, String> {
         return Err(format!("{}", msg));
     }
     choice.trim().parse::<usize>().map_err(|err| format!("{}", err))
+}
+
+fn clear_screen() {
+    println!("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 }
