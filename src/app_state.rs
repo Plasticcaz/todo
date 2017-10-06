@@ -47,6 +47,17 @@ impl AppState {
         &self.changes
     }
 
+    pub fn undo(&mut self) {
+        if let Some(event) = self.changes.pop() {
+            match event {
+                TodoAppEvent::AddTodoAt(_, index) => self.remove_todo(index),
+                TodoAppEvent::ToggleComplete(index) => self.toggle_complete(index),
+                TodoAppEvent::RemoveTodoAt(item, _) => self.add_todo(item),
+            }
+            self.changes.pop(); // We don't want to put the removing action on the change stack.
+        }
+    }
+
     pub fn is_running(&self) -> bool {
         self.running
     }
