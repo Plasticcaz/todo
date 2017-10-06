@@ -43,10 +43,6 @@ impl AppState {
         &self.todos
     }
 
-    pub fn get_changes(&self) -> &[TodoAppEvent] {
-        &self.changes
-    }
-
     pub fn undo(&mut self) {
         if let Some(event) = self.changes.pop() {
             match event {
