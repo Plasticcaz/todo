@@ -10,7 +10,12 @@ pub struct TodoItem {
 
 impl TodoItem {
     pub fn new<S: Into<String>>(description: S, complete: bool) -> TodoItem {
-        let description = description.into();
+        let mut description = description.into();
+        // Sanitize the string:
+        while let Some(index) = description.find(',') {
+            description.remove(index);
+        }
+
         TodoItem {
             description,
             complete
