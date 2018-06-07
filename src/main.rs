@@ -1,10 +1,10 @@
-mod app_state;
 mod app_event;
-mod todo_item;
+mod app_state;
 mod menu;
+mod todo_item;
 
 use app_state::AppState;
-use menu::{Menu, MenuItem, add_todo, toggle_complete, remove_todo};
+use menu::{add_todo, remove_todo, toggle_complete, Menu, MenuItem};
 
 fn main() {
     let state = AppState::new();

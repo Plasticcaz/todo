@@ -1,6 +1,6 @@
 use app_state::AppState;
-use todo_item::TodoItem;
 use std;
+use todo_item::TodoItem;
 
 pub fn remove_todo(state: &mut AppState) {
     clear_screen();
@@ -44,8 +44,7 @@ pub fn toggle_complete(state: &mut AppState) {
         the_choice = choice.unwrap();
         if the_choice < len {
             done = true;
-        }
-        else if the_choice == len {
+        } else if the_choice == len {
             return;
         }
     }
@@ -76,7 +75,7 @@ fn display_todos(state: &AppState) {
         println!("There are no todos currently stored.");
     }
 
-    for item in items { 
+    for item in items {
         println!("\t{}", item);
     }
     println!();
@@ -89,10 +88,7 @@ pub struct Menu {
 
 impl Menu {
     pub fn new(state: AppState, items: Vec<MenuItem>) -> Menu {
-        Menu {
-            state,
-            items,
-        }
+        Menu { state, items }
     }
     pub fn display(&self) {
         display_todos(&self.state);
@@ -103,7 +99,7 @@ impl Menu {
         println!();
     }
 
-    /// Have the user choose a menu item, and execute the action associated with that 
+    /// Have the user choose a menu item, and execute the action associated with that
     /// item.
     pub fn choose(&mut self) {
         let choice = match read_usize() {
@@ -117,8 +113,7 @@ impl Menu {
         if let Some(item) = self.items.get(choice) {
             let perform_action = item.action;
             perform_action(&mut self.state);
-        }
-        else {
+        } else {
             println!("Please select one of the options provided.")
         }
     }
@@ -134,7 +129,7 @@ impl MenuItem {
         let description = description.into();
         MenuItem {
             description,
-            action
+            action,
         }
     }
 }
@@ -144,9 +139,14 @@ fn read_usize() -> Result<usize, String> {
     if let Err(msg) = std::io::stdin().read_line(&mut choice) {
         return Err(format!("{}", msg));
     }
-    choice.trim().parse::<usize>().map_err(|err| format!("{}", err))
+    choice
+        .trim()
+        .parse::<usize>()
+        .map_err(|err| format!("{}", err))
 }
 
 fn clear_screen() {
-    println!("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+    println!(
+        "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+    );
 }

@@ -18,19 +18,14 @@ impl TodoItem {
 
         TodoItem {
             description,
-            complete
+            complete,
         }
     }
 }
 
 impl fmt::Display for TodoItem {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        let marker = if self.complete {
-            '✓'
-        }
-        else {
-            '✕'
-        };
+        let marker = if self.complete { '✓' } else { '✕' };
         write!(f, "{} - {}", marker, self.description)
     }
 }

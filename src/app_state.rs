@@ -1,5 +1,5 @@
-use todo_item::TodoItem;
 use app_event::TodoAppEvent;
+use todo_item::TodoItem;
 
 const FILEPATH: &str = "db.todo";
 
@@ -34,7 +34,7 @@ impl AppState {
         let item = self.todos.remove(index);
         self.changes.push(TodoAppEvent::RemoveTodoAt(item, index));
     }
-    
+
     pub fn toggle_complete(&mut self, index: usize) {
         let item = &mut self.todos[index];
         item.complete = !item.complete;
@@ -67,7 +67,7 @@ impl AppState {
 
     pub fn save(&self, path: &str) {
         use std::fs::File;
-        use std::io::{Write, BufWriter};
+        use std::io::{BufWriter, Write};
 
         let file = match File::create(path) {
             Ok(file) => file,
@@ -101,7 +101,7 @@ fn load(path: &str) -> Vec<TodoItem> {
         let line = line.unwrap();
         if line.contains(',') {
             let split: Vec<_> = line.split(',').collect();
-            if split.len() != 2 { 
+            if split.len() != 2 {
                 panic!("{} is not the expected format!", path);
             }
             let complete = split[1].trim().parse::<bool>().unwrap();

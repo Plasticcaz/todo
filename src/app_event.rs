@@ -6,4 +6,3 @@ pub enum TodoAppEvent {
     RemoveTodoAt(TodoItem, usize),
     ToggleComplete(usize),
 }
-
