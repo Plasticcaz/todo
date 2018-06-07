@@ -9,7 +9,7 @@ use menu::{add_todo, remove_todo, toggle_complete, Menu, MenuItem};
 fn main() {
     let state = AppState::new();
     let items: Vec<MenuItem> = vec![
-        MenuItem::new("Exit:", AppState::quit),
+        MenuItem::new("Save and Exit:", AppState::quit),
         MenuItem::new("Add Todo:", add_todo),
         MenuItem::new("Toggle complete:", toggle_complete),
         MenuItem::new("Remove Todo:", remove_todo),
